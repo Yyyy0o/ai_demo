@@ -2,9 +2,9 @@ package org.example.ai_demo;
 
 import com.alibaba.cloud.ai.dashscope.api.DashScopeApi;
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatModel;
-import jakarta.annotation.Resource;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,8 +26,16 @@ public class Config {
     }
 
     @Bean
-    public ChatClient chatClient(ChatModel chatModel) {
-        ChatClient.Builder builder = ChatClient.builder(chatModel);
-        return builder.build();
+    public ChatClient chatClient(ChatModel chatModel, ToolCallbackProvider toolCallbackProvider) {
+        return ChatClient.builder(chatModel)
+                .defaultToolCallbacks(toolCallbackProvider)
+                .build();
     }
+
+    @Bean
+    public ToolCallbackProvider toolCallbackProvider() {
+        return new ToolCallbackProvider();
+    }
+
+
 }
